@@ -1,0 +1,74 @@
+Parameters should be passed in the body as key value pairs, returns are JSON format.
+***NOTE: all keys of parameters passed in are camel case, all return body keys are uppercase***
+
+URI: http://server:port/api/campus
+HTTP Method: POST
+Request Body: { name: string }
+Return: { NEWID: int }
+Description: Creates a new campus in the database. Takes the campus name, and the id of the newly created campus is returned.
+
+URI: http://server:port/api/categories
+HTTP Method: GET
+Request Body: None
+Return: CATEGORIES: [ 
+                     { 
+                        "CATEGORY_ID": 1,
+                        "CATEGORY_DESC": "Dorm Room Repair",
+                        "PRIORITY_ID": 1,
+                        "PRIORITY DESC": "Low"
+                     } 
+                    ]
+Description: Returns information about all of the categories in the database. Takes no parameters, and returns data as an array with each element's structure as indicated above.
+
+URI: http://server:port/api/request/submit
+HTTP Method: POST
+Request Body: { userId: int, campusId: int, buildingId: int, locationDesc: string, categoryId: int ,desc: string, imagePath: string, public: bool (0 or 1) }
+Return: { NEWID: int }
+Description: Creates a new request in the database. Takes the parameters as shown above, and the id of the newly created request is returned.
+
+URI: http://server:port/api/request/getAllPublic
+HTTP Method: GET
+Request Body: None
+Return: REQUESTS: [
+                    { 
+                      "CATEGORY_ID": 1,
+                      "CATEGORY_DESC": "Dorm Room Repair",
+                      "BUILDING_ID": 1,
+                      "BUILDING_DESC": "Rec Center",
+                      "CAMPUS_ID": 1,
+                      "CAMPUS_DESC": "FAU Boca Raton",
+                      "LOC_DESC": "Leak in ceiling",
+                      "DESC": "NA",
+                      "STATUS_ID": 1,
+                      "STATUS_DESC": "New",
+                      "IMAGE_PATH": "www.here.com"
+                    }
+                  ]
+Description: Returns information about all of the active public requests in the database. Takes no parameters, and returns data as an array with each element's structure as indicated above.
+
+URI: http://server:port/api/request/getAllByUser
+HTTP Method: POST
+Request Body: { userId: int }
+Return: "USERS_REQUESTS": [
+                            {
+                              "CATEGORY_ID": 1,
+                              "CATEGORY_DESC": "Dorm Room Repair",
+                              "BUILDING_ID": 1,
+                              "BUILDING_DESC": "Rec Center",
+                              "PUBLIC": 1,
+                              "CAMPUS_ID": 1,
+                              "CAMPUS_DESC": "FAU Boca Raton",
+                              "LOC_DESC": "Leak in ceiling",
+                              "DESC": "NA",
+                              "STATUS_ID": 1,
+                              "STATUS_DESC": "New",
+                              "IMAGE_PATH": "www.here.com"
+                            }
+                          ]
+Description: Returns information about all of the active requests the specific user has submitted, both public and private. Takes a userId and returns data as an array with each element's structure as indicated above.
+
+URI: http://server:port/api/request/delete
+HTTP Method: POST
+Request Body: { requestId: int }
+Return: None
+Description: Performs a soft delete on the requestId passed in (sets active flag to 0 in the database). Takes a requestId and does not return anything.

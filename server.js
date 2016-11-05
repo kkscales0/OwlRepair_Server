@@ -9,8 +9,7 @@ var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
 var mysql 	   = require("mysql");
 
-// configure app to use bodyParser()
-// this will let us get the data from a POST
+// configure app to use bodyParser() this will let us get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -28,11 +27,11 @@ var db_con = mysql.createConnection({	// connection to mysql database
 
 // ROUTES FOR OUR API
 // =============================================================================
+
 var router = express.Router();              // get an instance of the express Router
 
 // middleware to use for all requests
 router.use(function(req, res, next) {
-    // do logging
     console.log('Something is happening.');
     next(); // make sure we go to the next routes and don't stop here
 });
@@ -42,21 +41,15 @@ router.get('/', function(req, res) {
     res.json({ message: 'hooray! welcome to our api!' });   
 });
 
-// more routes for our API will happen here
-
-// on routes that end in /campus
-// ---------------------------------------------------
-
 router.route('/campus')
 
-	// create a campus using POST
 	.post(function(req, res) {
 	
 		db_con.query('SET @campus_id = 0; CALL sp_create_campus(@campus_id, ?); SELECT @campus_id', [req.body.name], function(err,rows){
 			if (err) throw err;
 
-			var newId = rows[2][0]["@campus_id"];
-			res.json({ newId });
+			var NEWID = rows[2][0]["@campus_id"];
+			res.json({ NEWID });
 		});
 	});
 
@@ -64,11 +57,61 @@ router.route('/categories')
 
 	.get(function(req, res) {
         
-        db_con.query('CALL sp_get_categories()',function(err,rows){
+        db_con.query('CALL sp_get_categories()', function(err,rows){
 			if (err) throw err;
 
-			res.json({ categories: rows[0] });
+			res.json({ CATEGORIES: rows[0] });
 		});
+    });
+
+router.route('/request/submit')
+
+    .post(function(req, res) {
+
+        db_con.query('SET @request_id = 0; CALL sp_create_request(@request_id, ?, ?, ?, ?, ?, ?, ?, ?); SELECT @request_id', 
+                     [req.body.userId, req.body.campusId, req.body.buildingId, req.body.locationDesc, req.body.categoryId ,req.body.desc, req.body.imagePath, req.body.public], function(err,rows){
+			if (err) throw err;
+
+			var NEWID = rows[2][0]["@request_id"];
+			res.json({ NEWID });
+		});
+    
+    });
+
+router.route('/request/getAllPublic')
+
+    .get(function(req, res) {
+        
+        db_con.query('CALL sp_get_all_public_requests()', function(err,rows){
+			if (err) throw err;
+
+			res.json({ REQUESTS: rows[0] });
+		});
+        
+    });
+
+router.route('/request/getAllByUser')
+
+    .post(function(req, res) {
+
+        db_con.query('CALL sp_get_all_requests_for_user(?)', [req.body.userId], function(err,rows){
+			if (err) throw err;
+
+			res.json({ USERS_REQUESTS: rows[0] });
+		});
+        
+    });
+
+router.route('/request/delete')
+
+    .post(function(req, res) {
+
+        db_con.query('CALL sp_delete_request(?)', [req.body.requestId], function(err,rows){
+			if (err) throw err;
+
+            res.end();
+		});
+        
     });
 	
 	
