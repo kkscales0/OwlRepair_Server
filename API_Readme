@@ -12,10 +12,10 @@ HTTP Method: GET
 Request Body: None
 Return: CATEGORIES: [ 
                      { 
-                        "CATEGORY_ID": 1,
-                        "CATEGORY_DESC": "Dorm Room Repair",
-                        "PRIORITY_ID": 1,
-                        "PRIORITY DESC": "Low"
+                        CATEGORY_ID: int,
+                        CATEGORY_DESC: string,
+                        PRIORITY_ID: int,
+                        PRIORITY DESC: string
                      } 
                     ]
 Description: Returns information about all of the categories in the database. Takes no parameters, and returns data as an array with each element's structure as indicated above.
@@ -31,17 +31,17 @@ HTTP Method: GET
 Request Body: None
 Return: REQUESTS: [
                     { 
-                      "CATEGORY_ID": 1,
-                      "CATEGORY_DESC": "Dorm Room Repair",
-                      "BUILDING_ID": 1,
-                      "BUILDING_DESC": "Rec Center",
-                      "CAMPUS_ID": 1,
-                      "CAMPUS_DESC": "FAU Boca Raton",
-                      "LOC_DESC": "Leak in ceiling",
-                      "DESC": "NA",
-                      "STATUS_ID": 1,
-                      "STATUS_DESC": "New",
-                      "IMAGE_PATH": "www.here.com"
+                      CATEGORY_ID: int,
+                      CATEGORY_DESC: string,
+                      BUILDING_ID: int,
+                      BUILDING_DESC: string,
+                      CAMPUS_ID: int,
+                      CAMPUS_DESC: string,
+                      LOC_DESC: string,
+                      DESC: string,
+                      STATUS_ID: int,
+                      STATUS_DESC: string,
+                      IMAGE_PATH: string
                     }
                   ]
 Description: Returns information about all of the active public requests in the database. Takes no parameters, and returns data as an array with each element's structure as indicated above.
@@ -49,20 +49,20 @@ Description: Returns information about all of the active public requests in the 
 URI: http://server:port/api/request/getAllByUser
 HTTP Method: POST
 Request Body: { userId: int }
-Return: "USERS_REQUESTS": [
+Return: USERS_REQUESTS: [
                             {
-                              "CATEGORY_ID": 1,
-                              "CATEGORY_DESC": "Dorm Room Repair",
-                              "BUILDING_ID": 1,
-                              "BUILDING_DESC": "Rec Center",
-                              "PUBLIC": 1,
-                              "CAMPUS_ID": 1,
-                              "CAMPUS_DESC": "FAU Boca Raton",
-                              "LOC_DESC": "Leak in ceiling",
-                              "DESC": "NA",
-                              "STATUS_ID": 1,
-                              "STATUS_DESC": "New",
-                              "IMAGE_PATH": "www.here.com"
+                              CATEGORY_ID: int,
+                              CATEGORY_DESC: string,
+                              BUILDING_ID: int,
+                              BUILDING_DESC: string,
+                              PUBLIC: int,
+                              CAMPUS_ID: int,
+                              CAMPUS_DESC: string,
+                              LOC_DESC: string,
+                              DESC: string,
+                              STATUS_ID: int,
+                              STATUS_DESC: string,
+                              IMAGE_PATH: string
                             }
                           ]
 Description: Returns information about all of the active requests the specific user has submitted, both public and private. Takes a userId and returns data as an array with each element's structure as indicated above.
