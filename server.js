@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 var port = process.env.PORT || 8080;        // set our port
 
 var db_con = mysql.createConnection({	// connection to mysql database
-	connectionLimit : 20,
+	connectionLimit : 100,
     host: "104.196.219.23",
     user: "root",
     password: "root",
@@ -40,7 +40,21 @@ router.get('/', function(req, res) {
     res.json({ message: 'hooray! welcome to our api!' });   
 });
 
-router.route('/campus')
+router.route('/building/getAllForCampus')
+
+	.post(function(req, res) {
+	
+		db_con.query('CALL sp_get_buildings_for_campus(?)', [req.body.campusId], function(err,rows){
+			if (err) {
+                console.log(err);
+                throw err;
+            }
+
+			res.json({ BUILDINGS: rows[0] });
+		});
+	});
+
+router.route('/campus/create')
 
 	.post(function(req, res) {
 	
@@ -55,25 +69,25 @@ router.route('/campus')
 		});
 	});
 
-router.route('/test')
+router.route('/campus/getAll')
 
 	.get(function(req, res) {
 	
-        connection.query('SELECT * FROM LU_CATEGORY', function(err, result) {
-            
-          if (err) throw err;
+		db_con.query('CALL sp_get_all_campuses()', function(err,rows){
+			if (err) {
+                console.log(err);
+                throw err;
+            }
 
-          console.log(result.insertId);
-        });
+			res.json({ CAMPUSES: rows[0] });
+		});
 	});
 
-
-
-router.route('/categories')
+router.route('/category/getAll')
 
 	.get(function(req, res) {
         
-        db_con.query('CALL sp_get_categories()', function(err,rows){
+        db_con.query('CALL sp_get_all_categories()', function(err,rows){
 			if (err) {
                 console.log(err);
                 throw err;
@@ -83,34 +97,17 @@ router.route('/categories')
 		});
     });
 
-router.route('/request/submit')
+router.route('/request/delete')
 
     .post(function(req, res) {
 
-        db_con.query('SET @request_id = 0; CALL sp_create_request(@request_id, ?, ?, ?, ?, ?, ?, ?, ?); SELECT @request_id', 
-                     [req.body.userId, req.body.campusId, req.body.buildingId, req.body.locationDesc, req.body.categoryId ,req.body.desc, req.body.imagePath, req.body.public], function(err,rows){
+        db_con.query('CALL sp_delete_request(?)', [req.body.requestId], function(err,rows){
 			if (err) {
                 console.log(err);
                 throw err;
             }
 
-			var NEWID = rows[2][0]["@request_id"];
-			res.json({ NEWID });
-		});
-    
-    });
-
-router.route('/request/getAllPublic')
-
-    .get(function(req, res) {
-        
-        db_con.query('CALL sp_get_all_public_requests()', function(err,rows){
-			if (err) {
-                console.log(err);
-                throw err;
-            }
-
-			res.json({ REQUESTS: rows[0] });
+            res.end();
 		});
         
     });
@@ -130,19 +127,36 @@ router.route('/request/getAllByUser')
         
     });
 
-router.route('/request/delete')
+router.route('/request/getAllPublic')
 
-    .post(function(req, res) {
-
-        db_con.query('CALL sp_delete_request(?)', [req.body.requestId], function(err,rows){
+    .get(function(req, res) {
+        
+        db_con.query('CALL sp_get_all_public_requests()', function(err,rows){
 			if (err) {
                 console.log(err);
                 throw err;
             }
 
-            res.end();
+			res.json({ REQUESTS: rows[0] });
 		});
         
+    });
+
+router.route('/request/submit')
+
+    .post(function(req, res) {
+
+        db_con.query('SET @request_id = 0; CALL sp_create_request(@request_id, ?, ?, ?, ?, ?, ?, ?, ?); SELECT @request_id', 
+                     [req.body.userId, req.body.campusId, req.body.buildingId, req.body.locationDesc, req.body.categoryId ,req.body.desc, req.body.imagePath, req.body.public], function(err,rows){
+			if (err) {
+                console.log(err);
+                throw err;
+            }
+
+			var NEWID = rows[2][0]["@request_id"];
+			res.json({ NEWID });
+		});
+    
     });
 	
 	
