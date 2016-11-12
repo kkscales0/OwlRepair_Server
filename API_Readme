@@ -43,6 +43,12 @@ Return: { CATEGORIES: [
                      ]}
 Description: Returns information about all of the categories in the database. Takes no parameters, and returns data as an array with each element's structure as indicated above.
 
+URI: http://server:port/api/maintUser/getAll
+HTTP Method: GET
+Request Body: 
+Return: 
+Description: 
+
 URI: http://server:port/api/request/delete
 HTTP Method: POST
 Request Body: { requestId: int }
@@ -58,6 +64,8 @@ Return: { USERS_REQUESTS: [
                               CATEGORY_DESC: string,
                               BUILDING_ID: int,
                               BUILDING_DESC: string,
+                              PRIORITY_ID: int,
+                              PRIORITY_DESC: string,
                               PUBLIC: int,
                               CAMPUS_ID: int,
                               CAMPUS_DESC: string,
@@ -90,8 +98,38 @@ Return: { REQUESTS: [
                    ]}
 Description: Returns information about all of the active public requests in the database. Takes no parameters, and returns data as an array with each element's structure as indicated above.
 
+URI: http://server:port/api/request/getAllUnassigned
+HTTP Method: GET
+Request Body: 
+Return: 
+Description: 
+
+URI: http://server:port/api/request/getAssignedForMaintUser
+HTTP Method: POST
+Request Body: 
+Return: 
+Description: 
+
+URI: http://server:port/api/request/updateMaintUser
+HTTP Method: POST
+Request Body: 
+Return: 
+Description:
+
+URI: http://server:port/api/request/updateStatus
+HTTP Method: POST
+Request Body: 
+Return: 
+Description:
+
 URI: http://server:port/api/request/submit
 HTTP Method: POST
 Request Body: { userId: int, campusId: int, buildingId: int, locationDesc: string, categoryId: int ,desc: string, imagePath: string, public: bool (0 or 1) }
 Return: { NEWID: int }
 Description: Creates a new request in the database. Takes the parameters as shown above, and the id of the newly created request is returned.
+
+URI: http://server:port/api/status/getAll
+HTTP Method: GET
+Request Body: 
+Return: 
+Description: 
