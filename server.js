@@ -98,6 +98,8 @@ router.route('/category/getAll')
 		});
     });
 
+
+
 router.route('/request/delete')
 
     .post(function(req, res) {
@@ -143,6 +145,66 @@ router.route('/request/getAllPublic')
         
     });
 
+router.route('/request/getAllUnassigned')
+
+    .get(function(req, res) {
+        
+        db_con.query('CALL sp_get_all_unassigned_requests()', function(err,rows){
+			if (err) {
+                console.log(err);
+                throw err;
+            }
+
+			res.json({ REQUESTS: rows[0] });
+		});
+        
+    });
+
+router.route('/request/getAssignedForMaintUser')
+
+    .post(function(req, res) {
+
+        db_con.query('CALL sp_get_all_requests_for_maint_user(?)', [req.body.userId], function(err,rows){
+			if (err) {
+                console.log(err);
+                throw err;
+            }
+
+			res.json({ USERS_REQUESTS: rows[0] });
+		});
+        
+    });
+
+router.route('/request/updateMaintUser')
+
+    .post(function(req, res) {
+
+        db_con.query('CALL sp_update_request_maint_user(?,?)', [req.body.requestId, req.body.userId], function(err,rows){
+			if (err) {
+                console.log(err);
+                throw err;
+            }
+
+			res.json('Success');
+		});
+        
+    });
+
+router.route('/request/updateStatus')
+
+    .post(function(req, res) {
+
+        db_con.query('CALL sp_update_request_status(?,?)', [req.body.requestId, req.body.statusId], function(err,rows){
+			if (err) {
+                console.log(err);
+                throw err;
+            }
+
+			res.json('Success');
+		});
+        
+    });
+
 router.route('/request/submit')
 
     .post(function(req, res) {
@@ -158,6 +220,21 @@ router.route('/request/submit')
 			res.json({ NEWID });
 		});
     
+    });
+
+router.route('/status/getAll')
+
+    .get(function(req, res) {
+        
+        db_con.query('CALL sp_get_all_status()', function(err,rows){
+			if (err) {
+                console.log(err);
+                throw err;
+            }
+
+			res.json({ STATUS: rows[0] });
+		});
+        
     });
 	
 	
