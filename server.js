@@ -119,7 +119,7 @@ router.route('/request/getAllByUser')
 
     .post(function(req, res) {
 
-        db_con.query('CALL sp_get_all_requests_for_user(?)', [req.body.userId], function(err,rows){
+        db_con.query('CALL sp_get_all_requests_for_user(?)', [req.cookie.OwlRepair], function(err,rows){
 			if (err) {
                 console.log(err);
                 throw err;
@@ -179,7 +179,7 @@ router.route('/request/updateMaintUser')
 
     .post(function(req, res) {
 
-        db_con.query('CALL sp_update_request_maint_user(?,?)', [req.body.requestId, req.body.userId], function(err,rows){
+        db_con.query('CALL sp_update_request_maint_user(?,?)', [req.body.requestId, req.cookie.OwlRepair], function(err,rows){
 			if (err) {
                 console.log(err);
                 throw err;
@@ -210,7 +210,7 @@ router.route('/request/submit')
     .post(function(req, res) {
 
         db_con.query('SET @request_id = 0; CALL sp_create_request(@request_id, ?, ?, ?, ?, ?, ?, ?, ?); SELECT @request_id', 
-                     [req.body.userId, req.body.campusId, req.body.buildingId, req.body.locationDesc, req.body.categoryId ,req.body.desc, req.body.imagePath, req.body.public], function(err,rows){
+                     [req.cookie.OwlRepair, req.body.campusId, req.body.buildingId, req.body.locationDesc, req.body.categoryId ,req.body.desc, req.body.imagePath, req.body.public], function(err,rows){
 			if (err) {
                 console.log(err);
                 throw err;
@@ -220,6 +220,21 @@ router.route('/request/submit')
 			res.json({ NEWID });
 		});
     
+    });
+
+router.route('/session/create')
+
+    .post(function(req, res) {
+        
+        db_con.query('CALL sp_create_session(?, ?)', [req.body.username, req.cookie.OwlRepair], function(err,rows){
+			if (err) {
+                console.log(err);
+                throw err;
+            }
+
+			res.json('Success');
+		});
+        
     });
 
 router.route('/status/getAll')

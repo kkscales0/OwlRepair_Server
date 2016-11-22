@@ -57,7 +57,7 @@ Description: Performs a soft delete on the requestId passed in (sets active flag
 
 URI: http://server:port/api/request/getAllByUser
 HTTP Method: POST
-Request Body: { userId: int }
+Request Body: The cookie passed with the request should be named OwlRepair
 Return: { USERS_REQUESTS: [
                             {
                               REQUEST_ID: int,
@@ -123,7 +123,7 @@ Return: REQUESTS: [
                     ]
 Description: Returns information about all of the active, but unassigned, requests in the database. Takes no parameters, and returns data as an array with each element's structure as indicated above.
 
-URI: http://server:port/api/request/getAssignedForMaintUser
+URI: http://server:port/api/request/getAssignedForMaintUser ********change to use token
 HTTP Method: POST
 Request Body: { userId: int }
 Return: USERS_REQUESTS: [
@@ -151,7 +151,7 @@ Description: Returns information about all of the active requests in the databas
 
 URI: http://server:port/api/request/updateMaintUser
 HTTP Method: POST
-Request Body: { requestId: int, userId: int }
+Request Body: { requestId: int } and the cookie passed with the request should be named OwlRepair
 Return: 'Success' or Error
 Description: Updates the request with a maintenance user. Takes a request id and a maintenance user id as a parameter, and returns 'Success' or an Error.
 
@@ -163,9 +163,15 @@ Description: Updates the request with the status passed. Takes a request id and 
 
 URI: http://server:port/api/request/submit
 HTTP Method: POST
-Request Body: { userId: int, campusId: int, buildingId: int, locationDesc: string, categoryId: int ,desc: string, imagePath: string, public: bool (0 or 1) }
+Request Body: { campusId: int, buildingId: int, locationDesc: string, categoryId: int ,desc: string, imagePath: string, public: bool (0 or 1) } and the cookie passed with the request should be named OwlRepair
 Return: { NEWID: int }
 Description: Creates a new request in the database. Takes the parameters as shown above, and the id of the newly created request is returned.
+
+URI: http://server:port/api/session/create
+HTTP Method: POST
+Request Body: { username: string } and the cookie passed with the request should be named OwlRepair
+Return:
+Description: Creates or updates a session in the database. Takes parameters shown and returns...
 
 URI: http://server:port/api/status/getAll
 HTTP Method: GET
