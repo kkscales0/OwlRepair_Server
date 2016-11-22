@@ -8,10 +8,12 @@ var express    = require('express');        // call express
 var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
 var mysql 	   = require("mysql");
+var cookieParser = require('cookie-parser')
 
 // configure app to use bodyParser() this will let us get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 var port = process.env.PORT || 8080;        // set our port
 
@@ -119,7 +121,7 @@ router.route('/request/getAllByUser')
 
     .post(function(req, res) {
 
-        db_con.query('CALL sp_get_all_requests_for_user(?)', [req.cookie.OwlRepair], function(err,rows){
+        db_con.query('CALL sp_get_all_requests_for_user(?)', [req.cookies.OwlRepair], function(err,rows){
 			if (err) {
                 console.log(err);
                 throw err;
@@ -179,7 +181,7 @@ router.route('/request/updateMaintUser')
 
     .post(function(req, res) {
 
-        db_con.query('CALL sp_update_request_maint_user(?,?)', [req.body.requestId, req.cookie.OwlRepair], function(err,rows){
+        db_con.query('CALL sp_update_request_maint_user(?,?)', [req.body.requestId, req.cookies.OwlRepair], function(err,rows){
 			if (err) {
                 console.log(err);
                 throw err;
@@ -210,7 +212,7 @@ router.route('/request/submit')
     .post(function(req, res) {
 
         db_con.query('SET @request_id = 0; CALL sp_create_request(@request_id, ?, ?, ?, ?, ?, ?, ?, ?); SELECT @request_id', 
-                     [req.cookie.OwlRepair, req.body.campusId, req.body.buildingId, req.body.locationDesc, req.body.categoryId ,req.body.desc, req.body.imagePath, req.body.public], function(err,rows){
+                     [req.cookies.OwlRepair, req.body.campusId, req.body.buildingId, req.body.locationDesc, req.body.categoryId ,req.body.desc, req.body.imagePath, req.body.public], function(err,rows){
 			if (err) {
                 console.log(err);
                 throw err;
@@ -226,7 +228,7 @@ router.route('/session/create')
 
     .post(function(req, res) {
         
-        db_con.query('CALL sp_create_session(?, ?)', [req.body.username, req.cookie.OwlRepair], function(err,rows){
+        db_con.query('CALL sp_create_session(?, ?)', [req.body.username, req.cookies.OwlRepair], function(err,rows){
 			if (err) {
                 console.log(err);
                 throw err;
