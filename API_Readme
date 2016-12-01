@@ -43,11 +43,16 @@ Return: { CATEGORIES: [
                      ]}
 Description: Returns information about all of the categories in the database. Takes no parameters, and returns data as an array with each element's structure as indicated above.
 
-URI: http://server:port/api/maintUser/getAll***************
-HTTP Method: GET
-Request Body: 
-Return: 
-Description: 
+URI: http://server:port/api/maintUsers/get
+HTTP Method: POST
+Request Body: The cookie passed with the request should be named OwlRepair, and should contain the user's token.
+Return: { MAINT_USERS: [ 
+                       { 
+                        USER_ID: int,
+                        USERNAME: string
+                       } 
+                     ]}
+Description: If calling user is a maintenance user, will only return the user's id and username. If calling user is a supervisor, userId and username for all maintenance users will be returned.
 
 URI: http://server:port/api/request/delete
 HTTP Method: POST
@@ -57,7 +62,7 @@ Description: Performs a soft delete on the requestId passed in (sets active flag
 
 URI: http://server:port/api/request/getAllByUser
 HTTP Method: POST
-Request Body: The cookie passed with the request should be named OwlRepair
+Request Body: The cookie passed with the request should be named OwlRepair, and should contain the user's token.
 Return: { USERS_REQUESTS: [
                             {
                               REQUEST_ID: int,
@@ -123,9 +128,9 @@ Return: REQUESTS: [
                     ]
 Description: Returns information about all of the active, but unassigned, requests in the database. Takes no parameters, and returns data as an array with each element's structure as indicated above.
 
-URI: http://server:port/api/request/getAssignedForMaintUser ********change to use token
+URI: http://server:port/api/request/getAssignedForMaintUser
 HTTP Method: POST
-Request Body: { userId: int }
+Request Body: The cookie passed with the request should be named OwlRepair, and should contain the user's token.
 Return: USERS_REQUESTS: [
                             {
                               REQUEST_ID: int,
@@ -151,7 +156,7 @@ Description: Returns information about all of the active requests in the databas
 
 URI: http://server:port/api/request/updateMaintUser
 HTTP Method: POST
-Request Body: { requestId: int } and the cookie passed with the request should be named OwlRepair
+Request Body: { requestId: int, userId: int }
 Return: 'Success' or Error
 Description: Updates the request with a maintenance user. Takes a request id and a maintenance user id as a parameter, and returns 'Success' or an Error.
 
@@ -163,13 +168,13 @@ Description: Updates the request with the status passed. Takes a request id and 
 
 URI: http://server:port/api/request/submit
 HTTP Method: POST
-Request Body: { campusId: int, buildingId: int, locationDesc: string, categoryId: int ,desc: string, imagePath: string, public: bool (0 or 1) } and the cookie passed with the request should be named OwlRepair
+Request Body: { campusId: int, buildingId: int, locationDesc: string, categoryId: int ,desc: string, imagePath: string, public: bool (0 or 1) } and the cookie passed with the request should be named OwlRepair, and should contain the user's token.
 Return: { NEWID: int }
 Description: Creates a new request in the database. Takes the parameters as shown above, and the id of the newly created request is returned.
 
 URI: http://server:port/api/session/create
 HTTP Method: POST
-Request Body: { username: string } and the cookie passed with the request should be named OwlRepair
+Request Body: { username: string } and the cookie passed with the request should be named OwlRepair, and should contain the user's token.
 Return:
 Description: Creates or updates a session in the database. Takes parameters shown and returns...
 

@@ -100,7 +100,20 @@ router.route('/category/getAll')
 		});
     });
 
+router.route('/maintUsers/get')
 
+    .post(function(req, res) {
+
+        db_con.query('CALL sp_get_maint_users(?)', [req.cookies.OwlRepair], function(err,rows){
+			if (err) {
+                console.log(err);
+                throw err;
+            }
+
+            res.json({ MAINT_USERS: rows[0] });
+		});
+        
+    });
 
 router.route('/request/delete')
 
@@ -166,7 +179,7 @@ router.route('/request/getAssignedForMaintUser')
 
     .post(function(req, res) {
 
-        db_con.query('CALL sp_get_all_requests_for_maint_user(?)', [req.body.userId], function(err,rows){
+        db_con.query('CALL sp_get_all_requests_for_maint_user(?)', [req.cookies.OwlRepair], function(err,rows){
 			if (err) {
                 console.log(err);
                 throw err;
@@ -181,7 +194,7 @@ router.route('/request/updateMaintUser')
 
     .post(function(req, res) {
 
-        db_con.query('CALL sp_update_request_maint_user(?,?)', [req.body.requestId, req.cookies.OwlRepair], function(err,rows){
+        db_con.query('CALL sp_update_request_maint_user(?,?)', [req.body.requestId, req.body.userId], function(err,rows){
 			if (err) {
                 console.log(err);
                 throw err;
